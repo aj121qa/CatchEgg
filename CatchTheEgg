@@ -11,7 +11,7 @@ import java.util.Random;
 import java.time.Instant;
 import java.time.Duration;
 
-public class CatchTheEggGame extends Application {
+public class CatchTheEgg extends Application {
 
     private static final int WIDTH = 1000;
     private static final int HEIGHT = 700;
