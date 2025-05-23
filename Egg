@@ -1,0 +1,34 @@
+class Egg {
+    private final Ellipse shape;
+    private final int paneWidth;
+    private final int paneHeight;
+    private final int eggWidth;
+    private final int eggHeight;
+    private final Random random = new Random();
+
+    public Egg(int paneWidth, int paneHeight, int eggWidth, int eggHeight) {
+        this.paneWidth = paneWidth;
+        this.paneHeight = paneHeight;
+        this.eggWidth = eggWidth;
+        this.eggHeight = eggHeight;
+
+        shape = new Ellipse(eggWidth / 2.0, eggHeight / 2.0);
+        relocate();
+        changeColor();
+    }
+
+    public void relocate() {
+        double x = eggWidth / 2.0 + random.nextDouble() * (paneWidth - eggWidth);
+        double y = eggHeight / 2.0 + random.nextDouble() * (paneHeight - eggHeight);
+        shape.setCenterX(x);
+        shape.setCenterY(y);
+    }
+
+    public void changeColor() {
+        shape.setFill(Color.color(random.nextDouble(), random.nextDouble(), random.nextDouble()));
+    }
+
+    public Ellipse getShape() {
+        return shape;
+    }
+}
