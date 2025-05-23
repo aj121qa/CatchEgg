@@ -1,0 +1,104 @@
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Ellipse;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
+import javafx.scene.input.MouseEvent;
+
+import java.util.Random;
+import java.time.Instant;
+import java.time.Duration;
+
+public class CatchTheEggGame extends Application {
+
+    private static final int WIDTH = 1000;
+    private static final int HEIGHT = 700;
+    private static final int EGG_WIDTH = 100;
+    private static final int EGG_HEIGHT = 50;
+
+    private int clickCount = 0;
+    private Instant startTime;
+    private final Random random = new Random();
+
+    private Egg egg;
+    private Text timeText;
+
+    @Override
+    public void start(Stage primaryStage) {
+        Pane root = new Pane();
+        Scene scene = new Scene(root, WIDTH, HEIGHT);
+
+        egg = new Egg(WIDTH, HEIGHT, EGG_WIDTH, EGG_HEIGHT);
+        root.getChildren().add(egg.getShape());
+
+        timeText = new Text();
+        timeText.setVisible(false);
+        root.getChildren().add(timeText);
+
+        egg.getShape().setOnMouseClicked(this::handleEggClick);
+        startTime = Instant.now();
+
+        primaryStage.setTitle("Catch the Egg");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    private void handleEggClick(MouseEvent event) {
+        clickCount++;
+        if (clickCount < 5) {
+            egg.relocate();
+            egg.changeColor();
+        } else {
+            egg.getShape().setVisible(false);
+            Duration totalTime = Duration.between(startTime, Instant.now());
+            long seconds = totalTime.getSeconds();
+
+            timeText.setText("Time: " + seconds + " seconds");
+            timeText.setX(WIDTH / 2.0 - 60);
+            timeText.setY(HEIGHT / 2.0);
+            timeText.setVisible(true);
+            timeText.setStyle("-fx-font-size: 24px; -fx-fill: black;");
+        }
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+}
+
+class Egg {
+    private final Ellipse shape;
+    private final int paneWidth;
+    private final int paneHeight;
+    private final int eggWidth;
+    private final int eggHeight;
+    private final Random random = new Random();
+
+    public Egg(int paneWidth, int paneHeight, int eggWidth, int eggHeight) {
+        this.paneWidth = paneWidth;
+        this.paneHeight = paneHeight;
+        this.eggWidth = eggWidth;
+        this.eggHeight = eggHeight;
+
+        shape = new Ellipse(eggWidth / 2.0, eggHeight / 2.0);
+        relocate();
+        changeColor();
+    }
+
+    public void relocate() {
+        double x = eggWidth / 2.0 + random.nextDouble() * (paneWidth - eggWidth);
+        double y = eggHeight / 2.0 + random.nextDouble() * (paneHeight - eggHeight);
+        shape.setCenterX(x);
+        shape.setCenterY(y);
+    }
+
+    public void changeColor() {
+        shape.setFill(Color.color(random.nextDouble(), random.nextDouble(), random.nextDouble()));
+    }
+
+    public Ellipse getShape() {
+        return shape;
+    }
+}
